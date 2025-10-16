@@ -15,7 +15,7 @@
         "savedProjects": 1,
         "downloadsEnabled": false
       },
-      "stripePriceId": null
+      "stripePriceId": "price_1SfkaDpMHYysmi7L4m8Mqt"
     },
     "pro": {
       "name": "Pro",
@@ -30,7 +30,7 @@
         "savedProjects": 5,
         "downloadsEnabled": false
       },
-      "stripePriceId": null
+      "stripePriceId": "price_1SfnpDpMHYsmIrgdJHFQU"
     },
     "elite": {
       "name": "Elite",
@@ -46,7 +46,7 @@
         "savedProjects": "unlimited",
         "downloadsEnabled": false
       },
-      "stripePriceId": null
+      "stripePriceId": "price_1SfqADpMHYysmi0sJbTctG"
     }
   }
 }
