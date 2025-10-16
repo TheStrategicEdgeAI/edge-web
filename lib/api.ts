@@ -19,8 +19,7 @@ export async function getSubscription(token: string) {
 export async function createCheckoutSession(token: string, priceId: string, returnUrl: string) {
   const res = await fetch(`${API_URL}/checkout-session`, {
     method: 'POST'
-    headers: {
-      'Content-Type': 'application/json',
+    headers: {'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ priceId, returnUrl }),
