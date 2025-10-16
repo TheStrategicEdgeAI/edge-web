@@ -1,0 +1,52 @@
+{
+  "version": "1.0",
+  "currency": "USD",
+  "plans": {
+    "basic": {
+      "name": "Basic",
+      "monthly": 49,
+      "annual": null,
+      "features": {
+        "assistants": ["evaluate", "design"],
+        "masteryAccess": "beginner"
+      },
+      "limits": {
+        "messagesPerDay": 10,
+        "savedProjects": 1,
+        "downloadsEnabled": false
+      },
+      "stripePriceId": null
+    },
+    "pro": {
+      "name": "Pro",
+      "monthly": 197,
+      "annual": null,
+      "features": {
+        "assistants": ["evaluate", "design", "generate", "evolve"],
+        "masteryAccess": "full"
+      },
+      "limits": {
+        "messagesPerDay": 20,
+        "savedProjects": 5,
+        "downloadsEnabled": false
+      },
+      "stripePriceId": null
+    },
+    "elite": {
+      "name": "Elite",
+      "monthly": 229,
+      "annual": null,
+      "features": {
+        "assistants": ["evaluate", "design", "generate", "evolve"],
+        "priority": true,
+        "masteryAccess": "full"
+      },
+      "limits": {
+        "messagesPerDay": 100,
+        "savedProjects": "unlimited",
+        "downloadsEnabled": false
+      },
+      "stripePriceId": null
+    }
+  }
+}
