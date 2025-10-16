@@ -1,0 +1,5 @@
+{
+  "basic": { "monthly": "price_basic_prod" },
+  "pro": { "monthly": "price_pro_prod" },
+  "elite": { "monthly": "price_elite_prod" }
+}
