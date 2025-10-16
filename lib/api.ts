@@ -8,7 +8,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 export async function getSubscription(token: string) {
   const res = await fetch(`${API_URL}/subscriptions`, {
-    headers: { Authorization: `Berer ${token}` },
+    headers: { Authorization: `Bearer ${token}` },
   });
   if (!res.ok) {
     throw new Error('Failed to fetch subscription');
@@ -18,7 +18,7 @@ export async function getSubscription(token: string) {
 
 export async function createCheckoutSession(token: string, priceId: string, returnUrl: string) {
   const res = await fetch(`${API_URL}/checkout-session`, {
-    method: 'POST
+    method: 'POST'
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
