@@ -10,7 +10,7 @@ interface Module {
 export default function Dashboard() {
   const [modules, setModules] = useState<Module[]>([]);
   const [loading, setLoading] = useState(true);
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://edge-api.onrender.com';
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
   useEffect(() => {
     async function loadModules() {
