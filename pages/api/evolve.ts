@@ -8,7 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.setHeader('Allow', ['POST']);
     return res.status(405).end('Method Not Allowed');
   }
-  const { trades } = req.body as { trades: any };
+  const { trades, userId } = req.body as { trades: any; userId?: string };
   if (!Array.isArray(trades)) {
     return res.status(400).json({ error: 'Request body must include a `trades` array' });
   }
@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const resp = await fetch(`${apiUrl}/evolve/analyze`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ trades }),
+      body: JSON.stringify({ trades, userId }),
     });
     const data = await resp.json();
     res.status(resp.status).json(data);
