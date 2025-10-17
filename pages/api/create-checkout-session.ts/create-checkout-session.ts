@@ -1,31 +1,25 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://edge-api.onrender.com' ;
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
+    res.setHeader('Allow', ['POST']);
     return res.status(405).end('Method Not Allowed');
   }
-
   const { planId } = req.body;
-
+  if (!planId) {
+    return res.status(400).json({ error: 'planId is required' });
+  }
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
   try {
-    const response = await fetch(`${apiUrl}/stripe/checkout`, {
+    const resp = await fetch(`${apiUrl}/stripe/checkout`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ planId }),
     });
-
-    if (!response.ok) {
-      const error = await response.text();
-      return res.status(response.status).end(error);
-    }
-
-    const data = await response.json();
-    return res.status(200).json(data);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Internal server error' });
+    const data = await resp.json();
+    res.status(resp.status).json(data);
+  } catch (error: any) {
+    console.error('Error creating checkout session:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 }
