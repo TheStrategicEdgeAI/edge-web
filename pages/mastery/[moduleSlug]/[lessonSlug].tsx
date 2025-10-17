@@ -18,8 +18,8 @@ interface Lesson {
 
 export default function LessonPage() {
   const router = useRouter();
-  const { moduleSlug, lessonSlug } = router.query as { moduleSlug?: string; lessonSlug?: string };
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://edge-api.onrender.com';
+  const { moduleSlug, lessonSlug } = router.query;
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
   const [moduleData, setModuleData] = useState<Module | null>(null);
   const [lessonData, setLessonData] = useState<Lesson | null>(null);
   const [loading, setLoading] = useState(true);
@@ -28,6 +28,7 @@ export default function LessonPage() {
     async function loadLesson() {
       if (!moduleSlug || !lessonSlug) return;
       try {
+        // Fetch modules to identify the module ID.
         const resMods = await fetch(`${apiUrl}/modules`);
         const mods: Module[] = await resMods.json();
         const mod = mods.find((m) => m.slug === moduleSlug);
@@ -36,10 +37,13 @@ export default function LessonPage() {
           return;
         }
         setModuleData(mod);
+        // Fetch lessons for this module
         const resLessons = await fetch(`${apiUrl}/lessons?moduleId=${mod.id}`);
         const lessons: Lesson[] = await resLessons.json();
         const lesson = lessons.find((l) => l.slug === lessonSlug);
         if (lesson) {
+          // Fetch full lesson content via another endpoint if needed. Here we assume lesson content is included.
+          // In a real API you might have GET /lessons/:slug returning full details.
           setLessonData(lesson);
         }
       } catch (error) {
@@ -61,15 +65,13 @@ export default function LessonPage() {
     <div className="min-h-screen p-8 space-y-6">
       <div>
         <h1 className="text-2xl font-bold mb-2">{lessonData.title}</h1>
-        <p className="text-sm text-gray-400 mb-4">
-          Module: {moduleData.name} &bull; Lesson {lessonData.lesson_key}
-        </p>
+        <p className="text-sm text-gray-400 mb-4">Module: {moduleData.name} &bull; Lesson {lessonData.lesson_key}</p>
       </div>
-      <article
-        className="prose prose-invert max-w-none"
-        dangerouslySetInnerHTML={{ __html: lessonData.content }}
-      />
-      <a href={`/mastery/${moduleData.slug}`} className="edge-btn secondary">
+      <article className="prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: lessonData.content }} />
+      <a
+        href={`/mastery/${moduleData.slug}`}
+        className="edge-btn secondary"
+      >
         Back to module
       </a>
     </div>
