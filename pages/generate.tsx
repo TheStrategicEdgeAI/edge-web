@@ -49,17 +49,42 @@ export default function Generate() {
       const res = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ platform, indicator, timeframe }),
+        body: JSON.stringify({ platform, indicator, timeframe, userId: user?.id }),
       });
       const data = await res.json();
-      if (res.ok) {
-        setScript(data.script);
-      } else {
+      if (!res.ok || data.error) {
         setError(data.error || 'Generation failed');
+        setGenerating(false);
+        return;
       }
+      const jobId = data.jobId;
+      // Poll for result every 2 seconds
+      const poll = async () => {
+        try {
+          const resultRes = await fetch(`/api/generate/${jobId}`);
+          const resultData = await resultRes.json();
+          if (resultData.status === 'completed') {
+            setScript(resultData.script);
+            setGenerating(false);
+            return;
+          }
+          if (resultData.status === 'error') {
+            setError(resultData.error || 'Generation failed');
+            setGenerating(false);
+            return;
+          }
+        } catch (err: any) {
+          console.error(err);
+          setError('An error occurred while polling for results.');
+          setGenerating(false);
+          return;
+        }
+        // Continue polling
+        setTimeout(poll, 2000);
+      };
+      poll();
     } catch (err: any) {
       setError(err.message);
-    } finally {
       setGenerating(false);
     }
   };
