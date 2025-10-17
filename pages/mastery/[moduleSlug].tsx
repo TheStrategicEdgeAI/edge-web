@@ -18,7 +18,7 @@ interface Lesson {
 export default function ModulePage() {
   const router = useRouter();
   const { moduleSlug } = router.query;
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://edge-api.onrender.com';
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
   const [moduleData, setModuleData] = useState<Module | null>(null);
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,6 +27,7 @@ export default function ModulePage() {
     async function loadData() {
       if (!moduleSlug) return;
       try {
+        // Fetch modules to find the id for the slug
         const resMods = await fetch(`${apiUrl}/modules`);
         const mods: Module[] = await resMods.json();
         const mod = mods.find((m) => m.slug === moduleSlug);
@@ -35,6 +36,7 @@ export default function ModulePage() {
           return;
         }
         setModuleData(mod);
+        // Fetch lessons for the module
         const resLessons = await fetch(`${apiUrl}/lessons?moduleId=${mod.id}`);
         const lessonData: Lesson[] = await resLessons.json();
         setLessons(lessonData);
