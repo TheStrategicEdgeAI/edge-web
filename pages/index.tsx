@@ -1,20 +1,39 @@
 import React from 'react';
+
+// Import pricing configuration at build time. This ensures the landing page always shows
+// the canonical prices defined in pricing.config.json. If you adjust plan names or
+// amounts, update pricing.config.json and redeploy.
 import pricingConfig from '../pricing.config.json';
 
+interface Plan {
+  id: string;
+  label: string;
+  price: number;
+  features: {
+    evaluate: boolean;
+    design: boolean;
+    generate: boolean;
+    evolve: boolean;
+    dailyDesignLimit: number | null;
+    dailyGenerateLimit: number | null;
+    dailyEvolveLimit: number | null;
+  };
+}
+
 export default function Home() {
-  const plans = Object.values(pricingConfig.plans);
+  const plans: Plan[] = Object.values(pricingConfig.plans);
   return (
     <div className="min-h-screen p-8 flex flex-col items-center text-center space-y-8">
       <header>
         <h1 className="text-4xl md:text-5xl font-bold mb-2">The Strategic Edge AI</h1>
         <p className="text-lg md:text-xl text-gray-300 max-w-2xl">
-          Transform your trading with AI-driven insights, strategy generation and performance analytics.
+          Transform your trading with AI‑driven insights, strategy generation and performance analytics.
         </p>
       </header>
       <section className="w-full max-w-6xl">
         <h2 className="text-2xl md:text-3xl font-semibold mb-4">Pricing</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {plans.map((plan: any) => (
+          {plans.map((plan) => (
             <div key={plan.id} className="edge-card flex flex-col justify-between">
               <div>
                 <h3 className="text-xl font-semibold mb-2">{plan.label}</h3>
@@ -29,6 +48,7 @@ export default function Home() {
               <button
                 className="edge-btn mt-auto"
                 onClick={() => {
+                  // Direct users to the signup page with a plan query parameter.
                   window.location.href = `/signup?plan=${plan.id}`;
                 }}
               >
