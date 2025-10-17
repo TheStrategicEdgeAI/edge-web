@@ -7,10 +7,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.setHeader('Allow', ['POST']);
     return res.status(405).end('Method Not Allowed');
   }
-  const { platform, indicator, timeframe } = req.body as {
+  const { platform, indicator, timeframe, userId } = req.body as {
     platform: string;
     indicator?: string;
     timeframe?: string;
+    userId?: string;
   };
   if (!platform) {
     return res.status(400).json({ error: 'platform is required' });
@@ -20,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const resp = await fetch(`${apiUrl}/generate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ platform, indicator, timeframe }),
+      body: JSON.stringify({ platform, indicator, timeframe, userId }),
     });
     const data = await resp.json();
     res.status(resp.status).json(data);
