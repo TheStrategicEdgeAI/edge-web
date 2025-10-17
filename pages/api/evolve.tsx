@@ -81,7 +81,8 @@ export default function Evolve() {
       const res = await fetch('/api/evolve', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ trades: values }),
+        // Include userId so backend can enforce usage limits for evolve
+        body: JSON.stringify({ trades: values, userId: user?.id }),
       });
       const data = await res.json();
       if (res.ok) {
