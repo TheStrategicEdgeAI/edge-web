@@ -55,7 +55,7 @@ export default function Home() {
               <h3 className="text-xl font-semibold mb-2">Evolve</h3>
               <p className="text-sm text-gray-300">
                 Backtest and refine your strategies with advanced metrics and scenario drills. Gain
-                confidence by running stress tests and exploring "what if" situations.
+                confidence by running stress tests and exploring “what if” situations.
               </p>
             </div>
           </div>
