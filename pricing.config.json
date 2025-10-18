@@ -1,49 +1,19 @@
 {
   "plans": {
     "basic": {
-      "id": "basic",
-      "label": "Basic",
+      "name": "Basic",
       "price": 49,
-      "priceId": "price_1RwCfaDoo539moOYbg0FwMYS",
-      "features": {
-        "evaluate": true,
-        "design": true,
-        "generate": false,
-        "evolve": false,
-        "dailyDesignLimit": 10,
-        "dailyGenerateLimit": 0,
-        "dailyEvolveLimit": 0
-      }
+      "id": "price_1RwCfaDoo539moOYbg0FwMYS"
     },
     "pro": {
-      "id": "pro",
-      "label": "Pro",
+      "name": "Pro",
       "price": 197,
-      "priceId": "price_1SIxZxDoo539moOYkPJUCVc8",
-      "features": {
-        "evaluate": true,
-        "design": true,
-        "generate": true,
-        "evolve": true,
-        "dailyDesignLimit": 20,
-        "dailyGenerateLimit": 10,
-        "dailyEvolveLimit": 10
-      }
+      "id": "price_1SIxZxDoo539moOYkPJUCVc8"
     },
     "elite": {
-      "id": "elite",
-      "label": "Elite",
+      "name": "Elite",
       "price": 229,
-      "priceId": "price_1SIxuUDoo539moOY6PmvKVaO",
-      "features": {
-        "evaluate": true,
-        "design": true,
-        "generate": true,
-        "evolve": true,
-        "dailyDesignLimit": null,
-        "dailyGenerateLimit": null,
-        "dailyEvolveLimit": null
-      }
+      "id": "price_1SIxuUDoo539moOY6PmvKVaO"
     }
   }
 }
