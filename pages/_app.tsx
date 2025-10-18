@@ -1,17 +1,12 @@
 import type { AppProps } from 'next/app';
-import '../styles/globals.css';
 import { AuthProvider } from '../context/AuthContext';
-import NavBar from '../components/NavBar';
-import EdgeChat from '../components/EdgeChat';
 
-export default function EdgeApp({ Component, pageProps }: AppProps) {
+// Basic app wrapper with AuthProvider.  In a full implementation you
+// might also include global CSS and other context providers here.
+export default function App({ Component, pageProps }: AppProps) {
   return (
     <AuthProvider>
-      {/* Global navigation bar displayed on every page */}
-      <NavBar />
       <Component {...pageProps} />
-      {/* Global chat bubble for quick help */}
-      <EdgeChat />
     </AuthProvider>
   );
 }

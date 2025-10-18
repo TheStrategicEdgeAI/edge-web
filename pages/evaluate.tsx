@@ -1,106 +1,62 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { useRouter } from 'next/router';
-import { useAuth } from '../context/AuthContext';
+import { useState } from 'react';
+import Link from 'next/link';
 
-interface SubscriptionInfo {
-  plan: string;
-  entitlements: Record<string, any>;
-  stripe_customer_id?: string;
-}
-
+/**
+ * Evaluate page
+ *
+ * This simple implementation demonstrates a chat input and a static assistant response.
+ * In production you would call your API to send messages and stream results,
+ * as well as display lesson suggestions and glossary information on the right.
+ */
 export default function Evaluate() {
-  const { user, loading: authLoading } = useAuth();
-  const router = useRouter();
-  const [subInfo, setSubInfo] = useState<SubscriptionInfo | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [inputValue, setInputValue] = useState('');
-  const [messages, setMessages] = useState<Array<{ role: 'user' | 'assistant'; text: string }>>([]);
-  const [submitting, setSubmitting] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
+  const [input, setInput] = useState('');
 
-  useEffect(() => {
-    async function loadEntitlements() {
-      if (!user) return;
-      try {
-        const res = await fetch(`/api/subscription?userId=${encodeURIComponent(user.id)}`);
-        const data = await res.json();
-        setSubInfo(data);
-      } finally {
-        setLoading(false);
-      }
-    }
-    if (!authLoading) {
-      if (user) {
-        loadEntitlements();
-      } else {
-        router.push('/login');
-      }
-    }
-  }, [user, authLoading, router]);
-
-  if (authLoading || loading) {
-    return <div className="min-h-screen p-8">Loading…</div>;
-  }
-  if (!subInfo?.entitlements?.evaluate) {
-    return <div className="min-h-screen p-8">Evaluate is not available for your plan.</div>;
-  }
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  const sendMessage = () => {
+    if (!input.trim()) return;
+    const newMessages = [...messages, { role: 'user', content: input }];
+    // Simulate assistant response. Replace this with fetch to your API.
+    const assistantReply = `You said: ${input}. Here's a basic analysis based on moving averages and RSI.`;
+    setMessages([...newMessages, { role: 'assistant', content: assistantReply }]);
+    setInput('');
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const trimmed = inputValue.trim();
-    if (!trimmed) return;
-    // Add user message to conversation
-    setMessages((msgs) => [...msgs, { role: 'user', text: trimmed }]);
-    setInputValue('');
-    setSubmitting(true);
-    try {
-      const params = new URLSearchParams();
-      params.set('topic', trimmed);
-      if (user?.id) params.set('userId', user.id);
-      const res = await fetch(`/api/evaluate?${params.toString()}`);
-      const data = await res.json();
-      const reply = data.summary || 'No summary available.';
-      setMessages((msgs) => [...msgs, { role: 'assistant', text: reply }]);
-    } catch (err) {
-      console.error(err);
-      setMessages((msgs) => [...msgs, { role: 'assistant', text: 'Sorry, an error occurred.' }]);
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
   return (
-    <div className="min-h-screen p-8 flex flex-col">
-      <h1 className="text-3xl font-bold mb-4">Evaluate Assistant</h1>
-      <div className="flex-1 overflow-y-auto max-h-[60vh] space-y-4 border border-gray-700 rounded-lg p-4 mb-4">
+    <main style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
+      <Link href="/">
+        <a style={{ marginBottom: '1rem', display: 'inline-block', color: '#0070f3' }}>&larr; Back to home</a>
+      </Link>
+      <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Evaluate</h1>
+      <p style={{ maxWidth: '600px', marginBottom: '1.5rem' }}>
+        Chat with the AI to evaluate market conditions and understand key indicators. Use the input below to
+        ask questions about moving averages, RSI, candlestick patterns and more.
+      </p>
+      <div style={{ border: '1px solid #ccc', padding: '1rem', borderRadius: '8px', minHeight: '300px', marginBottom: '1rem', overflowY: 'auto' }}>
+        {messages.length === 0 && <p style={{ color: '#999' }}>Start by typing a question…</p>}
         {messages.map((msg, idx) => (
-          <div
-            key={idx}
-            className={`p-3 rounded-md ${msg.role === 'user' ? 'bg-gray-700 self-end text-right' : 'bg-gray-800 self-start'}`}
-          >
-            {msg.text}
+          <div key={idx} style={{ marginBottom: '0.75rem' }}>
+            <strong>{msg.role === 'user' ? 'You' : 'Assistant'}:</strong> {msg.content}
           </div>
         ))}
-        <div ref={messagesEndRef} />
       </div>
-      <form onSubmit={handleSubmit} className="flex space-x-2">
+      <div style={{ display: 'flex', gap: '0.5rem' }}>
         <input
           type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          placeholder="Ask about any topic…"
-          className="flex-1 p-2 rounded-md bg-gray-800 text-white"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              sendMessage();
+            }
+          }}
+          placeholder="Ask the AI…"
+          style={{ flexGrow: 1, padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px' }}
         />
-        <button type="submit" className="edge-btn" disabled={submitting}>
-          {submitting ? '…' : 'Send'}
+        <button onClick={sendMessage} style={{ padding: '0.5rem 1rem', backgroundColor: '#0070f3', color: 'white', border: 'none', borderRadius: '4px' }}>
+          Send
         </button>
-      </form>
-    </div>
+      </div>
+    </main>
   );
 }

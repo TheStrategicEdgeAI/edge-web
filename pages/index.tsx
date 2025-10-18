@@ -1,107 +1,92 @@
-import React from 'react';
-import Footer from '../components/Footer';
+import Link from 'next/link';
+import pricing from '../pricing.config.json';
 
-// Import pricing configuration at build time. This ensures the landing page always shows
-// the canonical prices defined in pricing.config.json. If you adjust plan names or
-// amounts, update pricing.config.json and redeploy.
-import pricingConfig from '../pricing.config.json';
-
-interface Plan {
-  id: string;
-  label: string;
-  price: number;
-  features: {
-    evaluate: boolean;
-    design: boolean;
-    generate: boolean;
-    evolve: boolean;
-    dailyDesignLimit: number | null;
-    dailyGenerateLimit: number | null;
-    dailyEvolveLimit: number | null;
-  };
-}
-
+// Landing page with hero, features and pricing sections.
 export default function Home() {
-  const plans: Plan[] = Object.values(pricingConfig.plans);
+  const { plans } = pricing;
   return (
-    <div className="min-h-screen flex flex-col">
-      <main className="flex-grow p-8 flex flex-col items-center text-center space-y-12">
-        <header>
-          <h1 className="text-4xl md:text-5xl font-bold mb-2">The Strategic Edge AI</h1>
-          <p className="text-lg md:text-xl text-gray-300 max-w-2xl">
-            Transform your trading with AI‑driven insights, strategy generation and performance analytics.
-          </p>
-        </header>
-
-        {/* Key features section */}
-        <section className="w-full max-w-5xl">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-6">Key Features</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="edge-card">
-              <h3 className="text-xl font-semibold mb-2">Evaluate</h3>
-              <p className="text-sm text-gray-300">
-                Upload your trade results or pick a topic to receive actionable summaries and performance
-                analytics. Identify strengths, weaknesses and opportunities for improvement in minutes.
-              </p>
-            </div>
-            <div className="edge-card">
-              <h3 className="text-xl font-semibold mb-2">Design & Generate</h3>
-              <p className="text-sm text-gray-300">
-                Describe your strategy using approved indicators and let our AI design a conceptual plan and
-                produce production‑ready code in NinjaScript or PineScript.
-              </p>
-            </div>
-            <div className="edge-card">
-              <h3 className="text-xl font-semibold mb-2">Evolve</h3>
-              <p className="text-sm text-gray-300">
-                Backtest and refine your strategies with advanced metrics and scenario drills. Gain
-                confidence by running stress tests and exploring “what if” situations.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* EDGE Method explainer */}
-        <section className="w-full max-w-5xl">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-6">Our EDGE Method</h2>
-          <p className="text-gray-300">
-            Our framework guides you through Evaluate, Design, Generate and Evolve steps to build and
-            optimize trading strategies efficiently. We help you learn the foundations, design robust
-            systems, generate code, and continuously evolve through analytics and scenario testing.
-          </p>
-        </section>
-
-        {/* Pricing section */}
-        <section className="w-full max-w-6xl">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-6">Pricing</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {plans.map((plan) => (
-              <div key={plan.id} className="edge-card flex flex-col justify-between">
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">{plan.label}</h3>
-                  <p className="text-3xl font-bold mb-4">${plan.price}/mo</p>
-                  <ul className="text-left space-y-1 mb-4">
-                    {plan.features.evaluate && <li>Evaluate access</li>}
-                    {plan.features.design && <li>Design access</li>}
-                    {plan.features.generate && <li>Generate access</li>}
-                    {plan.features.evolve && <li>Evolve access</li>}
-                  </ul>
+    <main style={{ fontFamily: 'sans-serif', padding: '2rem' }}>
+      <section style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>The Strategic Edge AI</h1>
+        <p style={{ fontSize: '1.25rem', maxWidth: '600px', margin: '0 auto' }}>
+          Unlock smarter trading strategies with our AI‑driven platform. Evaluate, design,
+          generate and evolve your trading system with ease.
+        </p>
+        <div style={{ marginTop: '2rem' }}>
+          <Link href="#pricing" legacyBehavior>
+            <a style={{ padding: '0.75rem 1.5rem', backgroundColor: '#0070f3', color: 'white', borderRadius: '4px', textDecoration: 'none' }}>
+              View Plans
+            </a>
+          </Link>
+        </div>
+      </section>
+      <section style={{ marginBottom: '3rem' }}>
+        <h2 style={{ textAlign: 'center', fontSize: '2rem', marginBottom: '1rem' }}>Key Features</h2>
+        <ul style={{ display: 'flex', justifyContent: 'space-around', listStyle: 'none', padding: 0 }}>
+          <li style={{ maxWidth: '250px' }}>
+            <h3>Evaluate</h3>
+            <p>Get AI insights on market conditions and core indicators.</p>
+          </li>
+          <li style={{ maxWidth: '250px' }}>
+            <h3>Design</h3>
+            <p>Create custom strategies with our indicator whitelist and risk controls.</p>
+          </li>
+          <li style={{ maxWidth: '250px' }}>
+            <h3>Generate</h3>
+            <p>Transform your strategy into complete NinjaScript and Pine scripts.</p>
+          </li>
+          <li style={{ maxWidth: '250px' }}>
+            <h3>Evolve</h3>
+            <p>Upload backtests and receive metrics, scenarios and improvement ideas.</p>
+          </li>
+        </ul>
+      </section>
+      <section id="pricing" style={{ marginBottom: '3rem' }}>
+        <h2 style={{ textAlign: 'center', fontSize: '2rem', marginBottom: '1rem' }}>Pricing</h2>
+        <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+          {Object.entries(plans).map(([key, plan]) => {
+            return (
+              <div key={key} style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '1.5rem', maxWidth: '250px' }}>
+                <h3>{plan.name}</h3>
+                <p style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>${plan.price}/mo</p>
+                <ul>
+                  {key === 'basic' && (
+                    <>
+                      <li>Evaluate & Design</li>
+                      <li>Limited daily quotas</li>
+                    </>
+                  )}
+                  {key === 'pro' && (
+                    <>
+                      <li>Everything in Basic</li>
+                      <li>Access Generate & Evolve</li>
+                      <li>Higher daily limits</li>
+                    </>
+                  )}
+                  {key === 'elite' && (
+                    <>
+                      <li>Everything in Pro</li>
+                      <li>Priority processing</li>
+                      <li>Highest daily limits</li>
+                    </>
+                  )}
+                </ul>
+                <div style={{ marginTop: '1rem' }}>
+                  {/* Link to call the API for checkout; placeholder only */}
+                  <Link href={`/checkout?plan=${key}`} legacyBehavior>
+                    <a style={{ display: 'block', textAlign: 'center', padding: '0.5rem 1rem', backgroundColor: '#0070f3', color: 'white', borderRadius: '4px', textDecoration: 'none' }}>
+                      Get Started
+                    </a>
+                  </Link>
                 </div>
-                <button
-                  className="edge-btn mt-auto"
-                  onClick={() => {
-                    // Direct users to the signup page with a plan query parameter.
-                    window.location.href = `/signup?plan=${plan.id}`;
-                  }}
-                >
-                  Get started
-                </button>
               </div>
-            ))}
-          </div>
-        </section>
-      </main>
-      <Footer />
-    </div>
+            );
+          })}
+        </div>
+      </section>
+      <footer style={{ textAlign: 'center', marginTop: '4rem', fontSize: '0.875rem', color: '#666' }}>
+        © {new Date().getFullYear()} The Strategic Edge AI. All rights reserved.
+      </footer>
+    </main>
   );
 }
