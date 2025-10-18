@@ -9,12 +9,15 @@ import Link from 'next/link';
  * as well as display lesson suggestions and glossary information on the right.
  */
 export default function Evaluate() {
-  const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
+  // Define a message type so TypeScript preserves literal string unions for the role.
+  type ChatMessage = { role: 'user' | 'assistant'; content: string };
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
 
   const sendMessage = () => {
     if (!input.trim()) return;
-    const newMessages = [...messages, { role: 'user', content: input }];
+    // Build up a new array of messages and ensure the literal types are preserved.
+    const newMessages: ChatMessage[] = [...messages, { role: 'user', content: input }];
     // Simulate assistant response. Replace this with fetch to your API.
     const assistantReply = `You said: ${input}. Here's a basic analysis based on moving averages and RSI.`;
     setMessages([...newMessages, { role: 'assistant', content: assistantReply }]);
