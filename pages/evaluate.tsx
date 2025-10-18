@@ -20,10 +20,13 @@ export default function Evaluate() {
     const newMessages: ChatMessage[] = [...messages, { role: 'user', content: input }];
     // Simulate assistant response. Replace this with fetch to your API.
     const assistantReply = `You said: ${input}. Here's a basic analysis based on moving averages and RSI.`;
-    // Cast the assistant message to ChatMessage so TypeScript preserves the literal
-    // string union type for the role.  Without this cast, TS may widen the
-    // role to `string` and cause an incompatibility error on build.
-    setMessages([...newMessages, { role: 'assistant', content: assistantReply } as ChatMessage]);
+    // Create the assistant message explicitly typed as ChatMessage. This ensures
+    // TypeScript preserves the literal string union type for the role.
+    const assistantMessage: ChatMessage = {
+      role: 'assistant',
+      content: assistantReply,
+    };
+    setMessages([...newMessages, assistantMessage]);
     setInput('');
   };
 
