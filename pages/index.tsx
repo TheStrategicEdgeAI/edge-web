@@ -1,15 +1,16 @@
 import Link from 'next/link';
 import { usePhases } from '@/context/ChatContext';
+import type { PhaseId } from '@/types/chat';
 
 export default function Home() {
   const phases = usePhases();
 
-  const cards = [
-    { id: 'evaluate', href: '/evaluate' as const },
-    { id: 'design', href: '/design' as const },
-    { id: 'generate', href: '/generate' as const },
-    { id: 'evolve', href: '/evolve' as const },
-  ] as const;
+  const cards: { id: PhaseId; href: string }[] = [
+    { id: 'evaluate', href: '/evaluate' },
+    { id: 'design', href: '/design' },
+    { id: 'generate', href: '/generate' },
+    { id: 'evolve', href: '/evolve' },
+  ];
 
   return (
     <main style={{ maxWidth: 960, margin: '0 auto', padding: 24 }}>
@@ -25,8 +26,7 @@ export default function Home() {
         }}
       >
         {cards.map((c) => {
-          // @ts-expect-error – index signature suppressed for brevity
-          const p = phases[c.id];
+          const p = phases[c.id]; // fully typed via PhaseId
           return (
             <Link
               key={c.id}
